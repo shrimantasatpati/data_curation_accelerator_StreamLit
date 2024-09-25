@@ -41,8 +41,7 @@ def setup_java():
     os.environ["PATH"] = f"{java_dir}/bin:" + os.environ["PATH"]
 
     st.success("Java 11 is set up successfully!")
-setup_java()
-
+    
 def check_uppercase(df):
     uppercase = [i for i in range(len(df.columns)) if df.columns[i] != df.columns[i].lower()]
     return uppercase
@@ -582,6 +581,8 @@ def logs(part, message):
 
 def curate_data(path, logging_path=None, output_file_path=None, primary_key=None, composite_keys=None,
                 valid_across_allcol=None, valid_spl_chars=None, inputtz=None, outputtz=None, aws_s3=None, azure_blob=None):
+    from pyspark.sql import SparkSession
+    setup_java()  # Ensure Java is set up
     try:
         if path is None:
             raise ValueError("No path given.")
