@@ -614,18 +614,14 @@ def logs(part, message):
 def curate_data(path, logging_path=None, output_file_path=None, primary_key=None, composite_keys=None,
                 valid_across_allcol=None, valid_spl_chars=None, inputtz=None, outputtz=None, aws_s3=None, azure_blob=None):
     from pyspark.sql import SparkSession
-    setup_java()  # Ensure Java is set up
+    # setup_java()  # Ensure Java is set up
     try:
         if path is None:
             raise ValueError("No path given.")
 
         # Read the dataframe based on the path type
         if urlparse(path).scheme in ['https', 'http']:
-            spark = SparkSession.builder \
-            .appName("Data Curation") \
-            .config("spark.jars.packages", "org.apache.spark:spark-hadoop-cloud_2.12:2.12.14") \
-            .getOrCreate()
-            # spark = SparkSession.builder.appName("Read CSV").getOrCreate()
+            spark = SparkSession.builder.appName("Read CSV").getOrCreate()
             spark.sparkContext.addFile(path)
             df = spark.read.format("csv").option("header", True).load("file://" + SparkFiles.get(
                 re.search(r"/([^/]+\.csv)$", path).group(1) if re.search(r"/([^/]+\.csv)$", path) else None))
