@@ -23,7 +23,30 @@ import tarfile
 
 @st.cache_resource
 def setup_java():
-    # Download and extract Java 11
+    # # Download and extract Java 11
+    # java_url = "https://download.java.net/java/GA/jdk11/openjdk-11_linux-x64_bin.tar.gz"
+    # java_dir = os.path.join(tempfile.gettempdir(), "java")  # Use a temporary directory
+
+    # # Create the directory if it doesn't exist
+    # os.makedirs(java_dir, exist_ok=True)
+
+    # # Download Java if not already downloaded
+    # java_tar = os.path.join(java_dir, "openjdk-11_linux-x64_bin.tar.gz")
+    # if not os.path.exists(java_tar):
+    #     response = requests.get(java_url)
+    #     with open(java_tar, 'wb') as f:
+    #         f.write(response.content)
+
+    # # Extract Java
+    # with tarfile.open(java_tar, "r:gz") as tar:
+    #     tar.extractall(path=java_dir)
+
+    # # Set JAVA_HOME and update PATH
+    # os.environ["JAVA_HOME"] = java_dir
+    # os.environ["PATH"] = f"{java_dir}/bin:" + os.environ["PATH"]
+
+    # st.success("Java 11 is set up successfully!")
+        # Download and extract Java 11
     java_url = "https://download.java.net/java/GA/jdk11/openjdk-11_linux-x64_bin.tar.gz"
     java_dir = os.path.join(tempfile.gettempdir(), "java")  # Use a temporary directory
 
@@ -39,7 +62,7 @@ def setup_java():
 
     # Extract Java
     with tarfile.open(java_tar, "r:gz") as tar:
-        tar.extractall(path=java_dir)
+        tar.extractall(path=java_dir, members=[m for m in tar.getmembers() if m.name.startswith("jdk-11")])
 
     # Set JAVA_HOME and update PATH
     os.environ["JAVA_HOME"] = java_dir
