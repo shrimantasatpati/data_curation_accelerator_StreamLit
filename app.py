@@ -18,6 +18,8 @@ from urllib.parse import urlparse
 import re
 import streamlit as st
 import subprocess
+import requests
+import tarfile
 
 @st.cache_resource
 def setup_java():
@@ -31,10 +33,13 @@ def setup_java():
     # Download Java if not already downloaded
     java_tar = os.path.join(java_dir, "openjdk-11_linux-x64_bin.tar.gz")
     if not os.path.exists(java_tar):
-        subprocess.run(["wget", java_url, "-O", java_tar])
-    
+        response = requests.get(java_url)
+        with open(java_tar, 'wb') as f:
+            f.write(response.content)
+
     # Extract Java
-    os.system(f"tar -xzf {java_tar} -C {java_dir} --strip-components=1")
+    with tarfile.open(java_tar, "r:gz") as tar:
+        tar.extractall(path=java_dir)
 
     # Set JAVA_HOME and update PATH
     os.environ["JAVA_HOME"] = java_dir
