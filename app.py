@@ -41,6 +41,7 @@ def setup_java():
     os.environ["PATH"] = f"{java_dir}/bin:" + os.environ["PATH"]
 
     st.success("Java 11 is set up successfully!")
+setup_java()
 
 def check_uppercase(df):
     uppercase = [i for i in range(len(df.columns)) if df.columns[i] != df.columns[i].lower()]
