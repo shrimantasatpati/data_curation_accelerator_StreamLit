@@ -23,7 +23,7 @@ import subprocess
 def setup_java():
     # Download and extract Java 11
     java_url = "https://download.java.net/java/GA/jdk11/openjdk-11_linux-x64_bin.tar.gz"
-    java_dir = "/opt/java"
+    java_dir = os.path.join(tempfile.gettempdir(), "java")  # Use a temporary directory
 
     # Create the directory if it doesn't exist
     os.makedirs(java_dir, exist_ok=True)
