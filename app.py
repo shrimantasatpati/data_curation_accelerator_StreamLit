@@ -46,7 +46,7 @@ def setup_java():
     # os.environ["PATH"] = f"{java_dir}/bin:" + os.environ["PATH"]
 
     # st.success("Java 11 is set up successfully!")
-        # Download and extract Java 11
+    # Download and extract Java 11
     java_url = "https://download.java.net/java/GA/jdk11/openjdk-11_linux-x64_bin.tar.gz"
     java_dir = os.path.join(tempfile.gettempdir(), "java")  # Use a temporary directory
 
@@ -60,15 +60,19 @@ def setup_java():
         with open(java_tar, 'wb') as f:
             f.write(response.content)
 
-    # Extract Java
+    # Extract Java while skipping problematic files
     with tarfile.open(java_tar, "r:gz") as tar:
-        tar.extractall(path=java_dir, members=[m for m in tar.getmembers() if m.name.startswith("jdk-11")])
+        for member in tar.getmembers():
+            # Skip files that may cause permission issues
+            if "legal" in member.name:
+                continue
+            tar.extract(member, path=java_dir)
 
     # Set JAVA_HOME and update PATH
     os.environ["JAVA_HOME"] = java_dir
     os.environ["PATH"] = f"{java_dir}/bin:" + os.environ["PATH"]
 
-    st.success("Java 11 is set up successfully!")
+    st.success("Java 11 is set up successfully!")   
     
 def check_uppercase(df):
     uppercase = [i for i in range(len(df.columns)) if df.columns[i] != df.columns[i].lower()]
